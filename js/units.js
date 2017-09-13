@@ -237,7 +237,7 @@
       Global.Units = {
 
         setUnitPath : function (apath) {
-          var s = apath ? (apath + apath.slice(-1) === '/' ? "" : '/') : "";
+          var s = apath ? (apath + (apath.slice(-1) === '/' ? "" : '/')) : "";
           UnitPath = s;
         },
         /**
