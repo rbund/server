@@ -43,7 +43,7 @@
       
   if (Units) Units.register("labour", $constructor, {
      author: "rbund"
-    ,version: "0.2.0 beta"
+    ,version: "beta"
   });
   
 })();

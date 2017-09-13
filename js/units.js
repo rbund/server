@@ -1,6 +1,5 @@
 /*!
  * =====================================================
- * units.js v1.0.0 
  * Copyright 2017 Rüdiger Bund
  * Lizenz / License: Bundsche Software Lizenz (BSL)
  * =====================================================
@@ -40,6 +39,7 @@
     UnitRegex = /^(\S+?)(?:\s+in\s+(.+))?$/
     ,Units = {}
     ,Dependencies = []
+    ,UnitPath = ""
   ;
 
   
@@ -236,6 +236,10 @@
    */  
       Global.Units = {
 
+        setUnitPath : function (apath) {
+          var s = apath ? (apath + apath.slice(-1) === '/' ? "" : '/') : "";
+          UnitPath = s;
+        },
         /**
          * Sets the default extension for units when no
          * source file name is specified.
@@ -300,7 +304,7 @@
             var parsearray = UnitRegex.exec(defa[i]), desc = {};
             if (parsearray) {
               var id = parsearray[1];
-              toload[id] = bp + (parsearray[2] || (id + (this.Extension||".js")));
+              toload[id] = UnitPath + bp + (parsearray[2] || (id + (this.Extension||".js")));
             }
           }
           addDependency(toload, fn);

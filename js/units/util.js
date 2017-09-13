@@ -13,6 +13,71 @@
   
       undefined = (()=>{})()
       
+      
+      /***
+       * Copies an array or array like object to an array.
+       * When fromix is negative, it will be added to length.
+       * When fromix is not given, 0 is taken as fromix.
+       * When count is not given, all elements starting with
+       * fromix will be copied.
+       *
+       * @param {array} src - the array to copy
+       * @param {int} fromix - first index to to copy from
+       * @param {int} count - number of elements to copy
+       */
+      ,copyArray : function(src, fromix, count) {
+        var s = src instanceof Object ? src : Object(src);
+        var len = s.length|0,
+            $from = fromix < 0 ? Math.max(0,len + fromix) : fromix|0,
+            maxlen = len-$from,
+            $count = count ? Math.min(count, maxlen) : maxlen,
+            res = new Array($count);
+        for (var i = 0, j = $from; i < $count; i++, j++) res[i] = s[j];
+        return res;
+      }
+
+      
+      /***
+       * Merges source objects own properties to a target object.
+       * Existing properties will be overwritten. The latter the source
+       * object, the higher the priority of the source object.
+       *
+       * @param {object} target - the target object
+       * @param {object} 1 - first source object
+       * ...
+       * @param {object} n - the last source object
+       * @return {object} - merged target
+       */
+      ,mergeObjects : function merge(target) {
+        var res = target||{};
+        if (res instanceof Object) {
+          for (var i = 1, len = arguments.length; i < len; i++) {
+            var s = arguments[i] instanceof Object ? arguments[i] : {};
+            for (var key in s) s.hasOwnProperty(key) && (res[key] = s[key]);
+          }
+        }
+        return(res);
+      }
+
+      /***
+       * Merges two arrays to a new one.
+       * Will remove doubles when not otherwise specified.
+       *
+       * @param {array} a1 - first array to merge
+       * @param {array} a2 - second array to merge
+       * @param {boolean} allowdoubles - keeps doubles when set to true, default: false
+       * @return {array} a new merged array
+       */
+      ,mergeArrays : function merge(a1, a2, allowdoubles) {
+        if (Array.isArray(a1) && Array.isArray(a2)) {
+          var res = a1.slice(0);
+          for (var i = 0, len = a2.length; i < len; i++)
+            if (allowdoubles || res.indexOf(a2[i]) < 0) res.push(a2[i]);
+          return(res);
+        }
+      }
+
+      
       /**
        * Similar to 'typeof', but returns a more exact type of the given
        * argument 'what'.
@@ -107,7 +172,6 @@
   
   if (Units) Units.register("util", util, {
      author: "rbund"
-    ,version: "1.0.0"
   });
   
 })();
