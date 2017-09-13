@@ -10,7 +10,7 @@
     
       "use strict";
       Units.setUnitPath("./js/units");
-      Units.uses(["util"], (...args) => {
+      Units.uses(["util","messagemanager"], (...args) => {
         console.log("units loaded");
         var uk = Units.listUnits();
         console.log("Available units:", uk);

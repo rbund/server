@@ -173,11 +173,12 @@
    * @return {object} unit ids / unit exports of asked for units
    */
   function getUnit() {
-    var res = {};
+    var res = {}, last = null;
     for (var i = 0; i < arguments.length; i++) {
-      var u = Units[arguments[i]];
-      res[arguments[i]] = (u && u.done) ? u.exports : null;
+      last = Units[arguments[i]];
+      res[arguments[i]] = (last = (last && last.done) ? last.exports : null);
     }
+    if (i < 2) return last;
     return res;
   }
   
@@ -297,7 +298,7 @@
          * @param {string} basepath - path to prepend when loading units
          */
         uses : function (defarray, fn, basepath) {
-          var defa = Array.isArray(defarray) ? defarray : (defa ? [defarray] : []),
+          var defa = Array.isArray(defarray) ? defarray : (defarray ? [defarray] : []),
               bp = basepath ? (basepath + basepath.slice(-1) === '/' ? '' : '/') : "",
               toload = {}; // holds the units to be loaded ({ unitid : href })
           for (var i = 0; i < defa.length; i++) {

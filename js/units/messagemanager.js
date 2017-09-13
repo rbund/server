@@ -544,7 +544,7 @@
       return ($prototype);
     }
     
-    Unit.uses("util", util => Unit.register("MessageManager", implementation(util), {
+    Units.uses("util", util => Units.register("messagemanager", implementation(util), {
       author: "rbund"
     }));
   })()

@@ -48,7 +48,7 @@
        * @param {object} n - the last source object
        * @return {object} - merged target
        */
-      ,mergeObjects : function merge(target) {
+      ,mergeObjects : function (target) {
         var res = target||{};
         if (res instanceof Object) {
           for (var i = 1, len = arguments.length; i < len; i++) {
@@ -68,7 +68,7 @@
        * @param {boolean} allowdoubles - keeps doubles when set to true, default: false
        * @return {array} a new merged array
        */
-      ,mergeArrays : function merge(a1, a2, allowdoubles) {
+      ,mergeArrays : function (a1, a2, allowdoubles) {
         if (Array.isArray(a1) && Array.isArray(a2)) {
           var res = a1.slice(0);
           for (var i = 0, len = a2.length; i < len; i++)
@@ -129,13 +129,13 @@
        * @return 1 if all parameter comply to type, else 0
        */
       ,checkType : function ($type) {
-        var c = (typeOfEx($type) === "string") ? 0 : 1;
+        var c = (this.typeOfEx($type) === "string") ? 0 : 1;
         for (var i = 1, len = arguments.length; i < len; i++) {
-          var a = arguments[i], at = typeOfEx(a);
+          var a = arguments[i], at = this.typeOfEx(a);
           if (c) { // $type used ot be an object
             if (!(a instanceof Object)) return 0;
             for (var key in $type)
-              if (!checkType($type[key], a[key])) return 0;
+              if (!this.checkType($type[key], a[key])) return 0;
           }
           else if (at !== $type) return 0;
         }
