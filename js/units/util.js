@@ -1,3 +1,10 @@
+/*!
+ * =====================================================
+ * Copyright 2017 Rüdiger Bund
+ * Lizenz / License: Bundsche Software Lizenz (BSL)
+ * =====================================================
+ */
+
 (function() {
 
   "use strict";
