@@ -1,0 +1,123 @@
+Bundsche Software Lizenz 1.1
+----------------------------
+
+(c) 2017 Rüdiger Bund
+
+Hiermit wird jeder Person, die eine Kopie des Programmes und/oder
+Programmquelltextes (die Sache) erhält, unentgeltlich und bis auf Widerruf das
+Recht eingeräumt, die Sache
+
+- zu nutzen
+- als Teil anderer Programme zu verwenden oder mit anderen Programmen zu
+  kombinieren
+- in unveränderter Form zu vervielfältigen, zu verbreiten und öffentlich
+  zugänglich zu machen
+- zu verändern und die Veränderung zu vervielfältigen, zu verbreiten und
+  öffentlich zugänglich zu machen
+
+solange folgende Bestimmungen akzeptiert und eingehalten sind:
+
+1. Es sind alle Vermerke zum Urheber und dieser Lizenz in der Sache zu
+   belassen.
+2. Es sind Empfängern der Sache deutlich auf den Urheber und auf diese Lizenz
+   hinzuweisen.
+3. Es sind Empfänger der Sache deutlich darauf auf Änderungen der Sache
+   hinzuweisen.
+4. Die Sache, auch in veränderter Form, darf nur unter den hier genannten
+   Bestimmungen verbreitet oder öffentlich zugänglich gemacht werden.
+5. Bei Verwendung als Teil anderer Programme oder in Kombination mit anderen
+   Programmen gelten die Punkte 2 und 3 ebenso.
+6. Es besteht keinerlei Gewährleistung für die Sache oder deren Eigenschaften.
+7. Es besteht keinerlei Haftung für durch die Verwendung der Sache entstandene
+   Schäden. Es obliegt der Person vor Nutzung der Sache diese auf Tauglichkeit
+   zu prüfen.
+
+Jede Verletzung einer dieser Bestimmungen führt automatisch zur Beendigung der
+Lizenzgewährung.
+
+Ausgenommen von den Rechten dieser Lizenz sind grundsätzlich alle staatlichen
+Institutionen und staatliche Stiftungen gleich welcher Nation. Ebenso
+ausgenommen sind Parteien, Parteistiftungen und Anstalten des öffentliche
+Rechts der Bundesrepublik Deutschland sowie Vereine oder juristische Personen,
+die mit oder für staatliche Institutionen, Anstalten des öffentlichen Rechts
+oder Parteien der Bundesrepublik Deutschland arbeiten oder mehr als 50% ihrer
+jährlichen Einkünfte von diesen beziehen. Einzig Schulen und Hochschulen ist
+es als staatlichen Institutionen gestattet die Sache entsprechend dieser
+Lizenzvereinbarung zu nutzen.
+
+Sollten einzelne Bestimmungen dieser Lizenz unwirksam oder undurchführbar sein
+oder unwirksam oder undurchführbar werden, bleibt davon die Wirksamkeit der
+Lizenz im Übrigen unberührt. An die Stelle der unwirksamen oder undurchführbaren
+Bestimmung soll diejenige wirksame und durchführbare Regelung treten, deren
+Wirkungen der beabsichtigten Zielsetzung am nächsten kommen, die der Urheber
+mit der unwirksamen bzw. undurchführbaren Bestimmung verfolgt hat. Dies gilt
+entsprechend für den Fall, dass sich die Lizenz als lückenhaft erweist.
+
+Dieser Lizenztext darf in unveränderter Form vervielfältigt, verbreitet,
+öffentlich zugänglich gemacht und zur Lizenzierung von Programmen und
+Programmquelltexten Dritter genutzt werden.
+
+
+===============================================================================
+English translation
+-------------------------------------------------------------------------------
+
+Bundsche Software License 1.1
+-----------------------------
+
+(c) 2017 Rüdiger Bund
+
+
+Hereby the right is granted free of charge and until revocation to any person
+who receives a copy of the program and/or the program sources (the software) to
+
+- use the software
+- implement the software as part of other programs or combine it with other
+  programs
+- copy, distribute or make the unalterd software public accessable
+- modify the software and to copy, distribute or make the modification
+  public accessable
+
+as long as the following provisions are accepted and complied with:
+
+1. All notices concerning the author and this license shall be left unchanged
+   within the software.
+2. The recipient shall be explicitly informed about the original author of the
+   software and about this license.
+3. The recipient shall be explicitly informed about modifications made of the
+   software.
+4. The software, even in modified form, may only be distributed or published
+   under the conditions of this license.
+5. When the software is used as part of other programs or in combination with
+   other programs points 2 and 3 shall apply as well.
+6. There is no guarantee of any kind for the software or its characteristics.
+7. The author is not liable for any damage caused by the use of the software.
+   It is up to user to check the software for suitability prior using the
+   software.
+
+Any breach of any of these provisions will automatically lead to the
+termination of the this license.
+
+Excluded from the rights of this license are in principle all state
+institutions and state foundations of any nation.
+Also excluded are political parties, party foundations and institutions under
+public law of the Federal Republic of Germany as well as associations or legal
+entities which work with or for government institutions, public institutions or
+political parties of the Federal Republic of Germany or which receive more than
+50% of their annual income from these. Only schools and colleges are allowed as
+government institutions to use the software according to this license
+agreement.
+
+Should individual provisions of this license be invalid or unenforceable, or
+become invalid or unenforceable, the validity of the license shall remain
+unaffected. The ineffective or impracticable provision shall be replaced by the
+effective and enforceable regulation, the effects of which are closest to the
+intended objective pursued by the author with the ineffective or unenforceable
+provision. This applies accordingly in the event that the license proves to be
+incomplete.
+
+This license may be copied, distributed, made public and used to license
+programs or source code of third parties as long is it remain unchanged.
+
+The English or other translation of the license text is just for information.
+Only the German original is legal binding.
