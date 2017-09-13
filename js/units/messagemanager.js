@@ -1,6 +1,6 @@
 /*!
  * =====================================================
- * Copyright 2017 Rüdiger Bund
+ * Copyright 2017 RÃ¼diger Bund
  * Lizenz / License: Bundsche Software Lizenz (BSL)
  * =====================================================
  */

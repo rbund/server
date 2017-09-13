@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- link rel="stylesheet" type="text/css" href="../res/css/....css" -->
+    <style type="text/css">
+    </style>
+    <script type="text/javascript" src="/js/units.js"></script>
+    <script type="text/javascript">
+    
+      "use strict";
+      Units.setUnitPath("/js/units");
+      Units.use(["util"], (...args) => {
+        console.log("units loaded");
+        var uk = Units.listUnits();
+        console.log("Available units:", uk);
+        for (var i = 0; i < uk.length; i++) {
+          var u = uk[i];
+          console.log("unit",u,":", Units.getUnit(u));
+          console.log("details:", Units.getUnitDetails(u));
+        }
+        console.log("done");
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
