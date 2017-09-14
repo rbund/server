@@ -9,18 +9,69 @@
     <script type="text/javascript">
     
       "use strict";
-      Units.setUnitPath("./js/units");
-      Units.uses(["util","messagemanager"], (...args) => {
-        console.log("units loaded");
-        var uk = Units.listUnits();
-        console.log("Available units:", uk);
-        for (var i = 0; i < uk.length; i++) {
-          var u = uk[i];
-          console.log("unit",u,":", Units.getUnit(u));
-          console.log("details:", Units.getUnitDetails(u));
+      
+      function logUnitsInfo() {
+      var uk = Units.listUnits();          
+          console.group("\nUnits info");
+            console.group("\nAvailable units");
+            console.log(uk);
+          
+          for (var i = 0; i < uk.length; i++) {
+            var u = uk[i];
+              console.log("\nunit "+u);
+              console.group();
+              console.log(Units.getUnit(u));
+              console.log("details:", Units.getUnitDetails(u));
+            console.groupEnd();
+          }
+          console.groupEnd();
+        console.groupEnd();
+      }
+      
+      
+      function testLabour() {
+        var labour = Units.getUnit("labour");
+        if (labour) {
+          var worker = function () {
+            //console.log("worker href:", location);
+            var href = ""+location;
+            if (href.indexOf("blob:") === 0) href = href.slice(5);
+            if (href.indexOf("/") >= 0) {
+              var a = href.split("/");
+              a.pop();
+              href = a.join("/");
+            }
+            
+            importScripts(href+"/js/units.js");
+            Units.setUnitPath(href+"/js/units");
+            Units.uses("util")
+            .then( () => console.log("util loaded", Units.getUnit("util")));
+            onmessage = function(e) {
+              console.log('Message received from main script:',e.data);
+              var workerResult = 'Worker Result:!' ;
+              console.log('Posting message back to main script');
+              postMessage(JSON.stringify(workerResult));
+            };
+          };
+          
+          var l = labour.fromFunction(worker);
+          l.on("*", (...args) => { console.log("received:", args); });
+          l.postMessage("hallo","Welt");
         }
+      }
+      
+      // set unit path
+      Units.setUnitPath("./js/units");
+      
+      // load units
+      Units.uses(["labour"])
+      .then( (...args) => {
+        console.log("units loaded");
+        logUnitsInfo();
+        testLabour();
         console.log("done");
-      });
+      })
+      .catch( e => {console.error(e)});
     </script>
   </head>
   <body>

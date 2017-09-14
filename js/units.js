@@ -90,6 +90,21 @@
   }
   
   /**
+   *
+   */
+  function loadError (id, reason) {
+    console.warn("Error loading unit \""+ id +"\"" + (reason ? (", " + reason) : ""));
+    var u = Units[id];
+    if (u) {
+      queryWaitingFor(id).forEach(d => (d.errors = (d.errors||[])).push(id) ); // mark dependencies
+      u.exports = null;
+      u.done = true;
+      u.error = "load error";
+      unitRegistered(id);
+    }
+  }
+  
+  /**
    * Event handler on loading error.
    * Is called when script loading via script element fails.
    *
@@ -97,14 +112,7 @@
    */
   function loadErrorEvent(e) {
     var id = e.target.getAttribute("data-unitid");
-    console.warn("Error loading unit \""+ id +"\"");
-    var u = Units[id];
-    if (u) {
-      u.exports = null;
-      u.done = true;
-      u.error = "load error";
-      unitRegistered(id);
-    }
+    loadError(id, "not found");
   }
   
   /**
@@ -119,10 +127,11 @@
     var hrefs = [];
     for (var key in def) {
       Units[key] = {"type" : "external", "href": def[key]};
-      hrefs = def[key];
+      hrefs.push(def[key]);
     }
     if (hrefs.length) {
       if (typeof Global.importScripts === "function") {
+        console.log(hrefs);
         Global.importScripts.apply(Global, hrefs);
       } else {
         var CurrentScript = getCurrentScript(),
@@ -189,6 +198,15 @@
    * @return {any} return value of the execution or false if the procedure isn't a function
    */
   function execDependency(entry) {
+    if (entry.errors) {
+      var failedliststr = entry.errors.join(",");
+      if (typeof entry.Error === "function")
+        entry.Result = entry.Error(new Error("failed to load unit " + failedliststr));
+      entry.Result = false;
+      loadError(entry.context, "failed dependency: " + failedliststr);
+      return false;
+    }
+    
     if (typeof entry.Proc === "function")
       entry.Result = entry.Proc(getUnit.apply(null, entry.needs));
     else
@@ -200,8 +218,8 @@
    *
    * Throws an exception when a cyclic dependency is detected.
    */
-  function addDependency( units, fn) {
-    var notloaded = {}, entry = { Proc: fn, needs: [], waitfor: [], context: getCurrentScriptData("data-unitid")|| "MAIN" };
+  function addDependency(units, fn, onerror) {
+    var notloaded = {}, entry = { Proc: fn, Error: onerror, needs: [], waitfor: [], context: getCurrentScriptData("data-unitid")|| "MAIN" };
     for (var key in units) {
       entry.needs.push(key);
       if (! Units[key]) {
@@ -210,7 +228,8 @@
       } else if (! Units[key].done) entry.waitfor.push(key);
     }
     var cyclic = checkCyclicDependency(entry);
-    if (cyclic) throw new Error("cyclic dependency detected: "+entry.context+" to "+cyclic+" to "+entry.context);
+    //if (cyclic) throw new Error("cyclic dependency detected: "+entry.context+" to "+cyclic+" to "+entry.context);
+    if (cyclic)  onerror(new Error("cyclic dependency detected: "+entry.context+" to "+cyclic+" to "+entry.context));
     
     Dependencies.push(entry);
     if (loadScripts(notloaded)) {
@@ -220,15 +239,31 @@
   }
 
   /**
+   * Returns all dependencies which wait for a certain unit.
    *
+   * @param {string} unitid - unit to look for
+   * @return {array} - the resulting dependency list
    */
-  function unitRegistered(unitid) {
+  function queryWaitingFor(unitid) {
+    var res = [];
     for (var i = 0; i < Dependencies.length; i++) {
       var d = Dependencies[i], ix = -1;
-      if ((ix = d.waitfor.indexOf(unitid)) >= 0) {
-        d.waitfor.splice(ix,1);
-        if (d.waitfor.length === 0) execDependency(d);
-      }
+      if ((ix = d.waitfor.indexOf(unitid)) >= 0) res.push(d);
+    }
+    return res;
+  }
+  
+  /**
+   * Removes an unit from the unit list dependencies may wait for.
+   *
+   * @param {string} unitid - unit to removeAttribute
+   */
+  function unitRegistered(unitid) {    
+    var waiting = queryWaitingFor(unitid);
+    for (var i = 0; i < waiting.length; i++) {
+      var d = waiting[i], ix = d.waitfor.indexOf(unitid);
+      d.waitfor.splice(ix,1);
+      if (d.waitfor.length === 0) execDependency(d);
     }
   }
   
@@ -237,6 +272,11 @@
    */  
       Global.Units = {
 
+        /**
+         * Globally sets the root path for units to load
+         *
+         * @param {string} apath - the path to setActive         
+         */
         setUnitPath : function (apath) {
           var s = apath ? (apath + (apath.slice(-1) === '/' ? "" : '/')) : "";
           UnitPath = s;
@@ -290,17 +330,18 @@
          * loading of the unit with that id was already triggered.
          * Once the units are available, `fn` is called together with an object 
          * containing all requested units are given as the only parameter.
-         * When loading of an unit fails (e.g. wrong file name or not found),
+         * When loading of an unit fails (e.g. wrong file name / not found),
          * a `null` value is given as value therefore.
          *
          * @param {string|array of string} defarray - unit ids which are needed
          * @param {function} fn - function to call when the needed units are available
          * @param {string} basepath - path to prepend when loading units
          */
-        uses : function (defarray, fn, basepath) {
-          var defa = Array.isArray(defarray) ? defarray : (defarray ? [defarray] : []),
-              bp = basepath ? (basepath + basepath.slice(-1) === '/' ? '' : '/') : "",
-              toload = {}; // holds the units to be loaded ({ unitid : href })
+        uses_old : function (defarray, fn, onerror, basepath) {
+          var defa = Array.isArray(defarray) ? defarray : (defarray ? [defarray] : [])
+              ,bp = basepath ? (basepath + basepath.slice(-1) === '/' ? '' : '/') : ""
+              ,toload = {} // holds the units to be loaded ({ unitid : href })
+              ;
           for (var i = 0; i < defa.length; i++) {
             var parsearray = UnitRegex.exec(defa[i]), desc = {};
             if (parsearray) {
@@ -308,8 +349,26 @@
               toload[id] = UnitPath + bp + (parsearray[2] || (id + (this.Extension||".js")));
             }
           }
-          addDependency(toload, fn);
+          addDependency(toload, fn, onerror);
         },
+        
+        uses : function (defarray, basepath) {
+          return new Promise( (fn, onerror) => {
+            var defa = Array.isArray(defarray) ? defarray : (defarray ? [defarray] : [])
+                ,bp = basepath ? (basepath + basepath.slice(-1) === '/' ? '' : '/') : ""
+                ,toload = {} // holds the units to be loaded ({ unitid : href })
+                ;
+            for (var i = 0; i < defa.length; i++) {
+              var parsearray = UnitRegex.exec(defa[i]), desc = {};
+              if (parsearray) {
+                var id = parsearray[1];
+                toload[id] = UnitPath + bp + (parsearray[2] || (id + (this.Extension||".js")));
+              }
+            }
+            addDependency(toload, fn, onerror);
+          } );
+        },
+        
         /**
          * Returns an object with all units requested.
          *
@@ -342,4 +401,4 @@
         }
       };
       
-})(window||self);
+})( typeof window === "Object" ? window : self );

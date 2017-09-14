@@ -74,7 +74,7 @@
       const IMessageHandler = {
         on : "function",
         off: "function",
-        sendMessage: "function"
+        dispatchMessage: "function"
       };
       
       // Identifier of message type to catch all messages
@@ -244,14 +244,14 @@
         /**
          * Initializes the connector.
          * Creates property "handleMessage" as bounded function to
-         * owner.sendMessage() for forwarding incoming events to the message manager.
+         * owner.dispatchMessage() for forwarding incoming events to the message manager.
          *
          * @param {object} owner - the owning message manager
          * @return {int} always 1
          */
         onInit : function (owner) {
           this.handleMessage = (function (e) {
-            return this.Owner.sendMessage(e.type, e);
+            return this.Owner.dispatchMessage(e.type, e);
           }).bind(this);
           return 1;
         },
@@ -281,7 +281,7 @@
               _type = this.modifyMessageType($type, modifier),
               f = _type !== $type ?
               function (e) {
-                return owner.sendMessage(_type, e);
+                return owner.dispatchMessage(_type, e);
               } : this.handleMessage;
           source.addEventListener($type, f, true);
           return(f);
@@ -322,14 +322,14 @@
         /**
          * Initializes the connector.
          * Creates property "handleMessage" as bounded function to
-         * owner.sendMessage() for forwarding incoming events to the message manager.
+         * owner.dispatchMessage() for forwarding incoming events to the message manager.
          *
          * @param {object} owner - the owning message manager
          * @return {int} always 1
          */
         onInit : function (owner) {
           this.handleMessage = (function () {
-            return this.Owner.sendMessage.apply(this.Owner, arguments);
+            return this.Owner.dispatchMessage.apply(this.Owner, arguments);
           }).bind(this);
           return 1;
         },
@@ -346,7 +346,7 @@
           var owner = this.Owner,
               _type = this.modifyMessageType($type, modifier),
               f = _type !== $type ? function () {
-                return owner.sendMessage.apply(owner, [_type].concat(util.copyArray(arguments,1))) 
+                return owner.dispatchMessage.apply(owner, [_type].concat(util.copyArray(arguments,1))) 
             }
           : this.handleMessage;
           source.on($type, f);
@@ -395,6 +395,18 @@
         },
 
         /**
+         * Translates a message before it is dispatched.
+         * By overwriting this method it is possible to modify
+         * any message before it is dispatched.
+         *
+         * @param {arguments} args - dispatchMessage arguments received
+         * @return {arguments|array} the translated message to dispatch
+         */
+        translateMessage : function (args) {
+          return args;
+        },
+        
+        /**
          * Dispatches a message.
          * A message is dispatched to all listeners, as long as no listener is
          * returning a value evaluated as *true*. Catchall listeners are served first.
@@ -405,10 +417,11 @@
          * @param {...any} - message content
          * @return {any} the first returned result of a listener or undefined if none
          */
-        sendMessage : function($type) {
-          var r, l = null, a = (this._listeners[CATCHALL] || []).concat($type !== CATCHALL ? this._listeners[$type] || [] : []);
+        dispatchMessage : function($type) {
+          var r, l = null, a = (this._listeners[CATCHALL] || []).concat($type !== CATCHALL ? this._listeners[$type] || [] : [])
+              , msg = this.translateMessage(arguments);              
           for (var i = 0, len = a.length; i < len; i++)
-            if (((l = a[i]) !== null) && (r = l.apply(this, arguments))) return(r);
+            if (((l = a[i]) !== null) && (r = l.apply(this, msg))) return(r);
         },
         
         /**
@@ -544,7 +557,13 @@
       return ($prototype);
     }
     
+    /*
     Units.uses("util", util => Units.register("messagemanager", implementation(util), {
       author: "rbund"
     }));
+    */
+    Units.uses("util")
+    .then( (u) => Units.register("messagemanager", implementation(u), { author: "rbund"}) )
+    .catch( (e) => { console.error(e) } );
+    
   })()
