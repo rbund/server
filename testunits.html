@@ -34,16 +34,10 @@
         if (labour) {
           var worker = function () {
             console.log("workers location:", location);
-            var href = ""+location;
-            if (href.indexOf("blob:") === 0) href = href.slice(5);
-            if (href.indexOf("/") >= 0) {
-              var a = href.split("/");
-              a.pop();
-              href = a.join("/");
-            }
+            console.log("page origin: ",_ORIGIN);
             
-            importScripts(href+"/js/units.js");
-            Units.setUnitPath(href+"/js/units");
+            importScripts(_ORIGIN+"/js/units.js");
+            Units.setUnitPath(_ORIGIN+"/js/units");
             Units.uses("util")
             .then( () => console.log("util loaded", Units.getUnit("util")));
             onmessage = function(e) {

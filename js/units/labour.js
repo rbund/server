@@ -59,24 +59,27 @@
       }
     };
     
+    
+    // static class functions
+    $constructor.fromString = function (astring, options) {
+      var base = "const _ORIGIN = \"" + location.origin + location.pathname.split('/').filter((e,i,a) => (i < a.length-1)).join('/') + "\";\n";
+      var blob = new Blob([base, astring], {"type":"text/javascript"});
+      return new $constructor(URL.createObjectURL(blob), options);
+    }
+    
     const _fromfunction_regex = /^function .+\{?|\}$/g;
     $constructor.fromFunction = function(fn, options) {
       if (typeof fn !== "function") throw new TypeError("function as parameter needed");
-      var blob = new Blob([fn.toString().replace(_fromfunction_regex,"")], {"type": "text/javascript"});
-      return new this(URL.createObjectURL(blob), options);
+      return $constructor.fromString(fn.toString().replace(_fromfunction_regex,""), options);
     }
-    
-    // static class functions
-    
+
     $constructor.fromDocument = function(selector, options, index) {
       var ix = index|0;
-      var blob = new Blob([document.querySelectorAll(selector)[ix].textContent], {"type": "text/javascript"});
-      return new this(URL.createObjectURL(blob), options);
+      return $constructor.fromString(document.querySelectorAll(selector)[ix].textContent, options);
     }
     
     $constructor.fromDocumentAll = function(selector, options) {
-      var blob = new Blob(document.querySelectorAll(selector).map( e=>e.textContent), {"type": "text/javascript"});
-      return new this(URL.createObjectURL(blob), options);
+      return $constructor.fromString(document.querySelectorAll(selector).map( e=>e.textContent).join("\n"), options);
     }
         
     Units.register("labour", $constructor, {
