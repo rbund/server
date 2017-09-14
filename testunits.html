@@ -33,7 +33,7 @@
         var labour = Units.getUnit("labour");
         if (labour) {
           var worker = function () {
-            //console.log("worker href:", location);
+            console.log("workers location:", location);
             var href = ""+location;
             if (href.indexOf("blob:") === 0) href = href.slice(5);
             if (href.indexOf("/") >= 0) {
