@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Run script</title>
+    <style id="style">
+      body {
+        background-color: #111;
+        color: #C69C20;
+        font: 16px monospace;
+      }
+      #screen {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        border: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="screen"></iframe>
+    <script>
+      (function () {
+        "use strict";
+        //
+        window.clog = console.log.bind(console)
+
+        var Arguments = (function () {
+          var a = { flags : [], pairs: {} },
+              pa = location.search ? location.search.slice(1).split("&") : []
+          pa.forEach(function (s) {
+            var pkv = s.split("=")
+            if (pkv.length > 1)
+              a.pairs[decodeURIComponent(pkv[0])] = decodeURIComponent(pkv[1]);
+            else if (pkv.length === 1)
+              a.flags.push(pkv[0])
+          })
+          return a
+        })();
+
+        function getArg(key) {
+          return Arguments.pairs[key]
+        }
+        function hasArgFlag(varargs) {
+          for (let i = 0; i < arguments.length; i++)
+            if (sys.Arguments.flags.indexOf(arguments[i]) >= 0) return arguments[i]
+              return false
+        }
+
+        function boot() {
+          // evaluate target script and dir
+          var src = getArg("src") || Arguments.flags[0],
+              dir = getArg("dir")  || "inc"
+          if (src) { // run target script when given
+            src = dir+"/"+src
+            document.getElementById("screen").src = src;
+          } else {
+            // show help
+          }
+        }
+
+        boot()
+      })()
+      </script>
+  </body>
+</html>
