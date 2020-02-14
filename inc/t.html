@@ -11,5 +11,21 @@
   </head>
   <body>
     <h1>test</h1>
+    <script type="text/javascript" src="../js/units.js"></script>
+    <script type="text/javascript">
+      (function () {
+        "use strict";
+        Units.setUnitPath("../js/units");
+        Unit.uses([])
+        .then(function () {
+          // do something...
+        })
+        .catch(function (e) {
+          console.error(e);
+        })
+      })();
+      
+      
+    </script>
   </body>
 </html>
