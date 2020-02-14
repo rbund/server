@@ -16,9 +16,10 @@
       (function () {
         "use strict";
         Units.setUnitPath("../js/units");
-        Unit.uses([])
+        Unit.uses(["emitters"])
         .then(function () {
           // do something...
+          console.log(arguments);
         })
         .catch(function (e) {
           console.error(e);
