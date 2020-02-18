@@ -176,6 +176,10 @@
   function WinBus() {
     var TMap = Object.create(null),
         registerTarget = function (target, tid) {
+          if (target == null) {
+            console.warn("tried to register a 'null' target");
+            return "";
+          }
           tid = tid == null ? "target" : (""+tid);
           for (let c = 1, ttid = tid; TMap[tid] && c < Number.MAX_VALUE; tid = ttid + (c++)) ;
           if (TMap[tid]) return "";
