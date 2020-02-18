@@ -182,9 +182,9 @@
           TMap[tid] = target;
           return tid;
         },
-        _post = function (tid, m) {
+        _post = function (tid, m, origin) {
           var tWin = TMap[tid] || null;
-          if (tWin) tWin.postMessage(m);
+          if (tWin) tWin.postMessage(m, origin||"*");
           return tWin != null;
         },
         res = Object.assign({
@@ -216,8 +216,8 @@
           onmessage: function (m) {
             pe(m.data)
           },
-          post : function (m) {
-            master.postMessage(m)
+          post : function (m, origin) {
+            master.postMessage(m, origin||"*")
           }
         };
     master = master || win.opener || win.top || win,
