@@ -188,6 +188,8 @@
         },
         _post = function (tid, m, origin) {
           var tWin = TMap[tid] || null;
+          // new, set the target within the message when not given...
+          m.target = m.target || tid;
           if (tWin) tWin.postMessage(m, origin||"*");
           return tWin != null;
         },
