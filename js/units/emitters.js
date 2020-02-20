@@ -184,6 +184,7 @@
           for (let c = 1, ttid = tid; TMap[tid] && c < Number.MAX_VALUE; tid = ttid + (c++)) ;
           if (TMap[tid]) return "";
           TMap[tid] = target;
+          res.sub({ target: tid }, function (m) { _post(tid, m) });
           return tid;
         },
         _post = function (tid, m, origin) {
@@ -198,7 +199,7 @@
             var src = m.source || m.target,
                 i = Object.values(TMap).indexOf(src),
                 k = (i >= 0) ? Object.keys(TMap)[i] : registerTarget(src);
-            if (i < 0) res.sub({ target: k }, function (m) { _post(k, m) });
+            //if (i < 0) res.sub({ target: k }, function (m) { _post(k, m) });
             res.pub(Object.assign({
               origin: m.origin,
               source: k
