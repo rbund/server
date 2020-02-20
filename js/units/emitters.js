@@ -205,7 +205,8 @@
             }, m.data))
           },
           registerTarget: registerTarget,
-          post: _post
+          post: _post,
+          getMap: function () { return Object.assign({}, TMap); },
         }, DynBus());
     TMap.Main = self || window;
     return res;
